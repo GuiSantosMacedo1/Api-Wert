@@ -3,13 +3,14 @@ import Product from '../models/Product';
 
 export const createProduct = async (req: Request, res: Response) => {
   const { name, description, price, stock } = req.body;
-
+  
   try {
     const product = new Product({
       name,
       description,
       price,
-      stock
+      stock,
+      imageUrl: req.file ? `/uploads/${req.file.filename}` : undefined
     });
 
     await product.save();
@@ -19,7 +20,6 @@ export const createProduct = async (req: Request, res: Response) => {
     res.status(500).send('Erro no servidor');
   }
 };
-
 export const getProducts = async (req: Request, res: Response) => {
   try {
     const products = await Product.find();
@@ -48,16 +48,22 @@ export const getProductById = async (req: Request, res: Response) => {
 
 export const updateProduct = async (req: Request, res: Response) => {
   const { name, description, price, stock } = req.body;
-
+  
   try {
     let product = await Product.findById(req.params.id);
     if (!product) {
       return res.status(404).json({ msg: 'Produto não encontrado' });
     }
 
+    const updateData: any = { name, description, price, stock };
+    
+    if (req.file) {
+      updateData.imageUrl = `/uploads/${req.file.filename}`;
+    }
+
     product = await Product.findByIdAndUpdate(
       req.params.id,
-      { name, description, price, stock },
+      updateData,
       { new: true }
     );
 
@@ -70,6 +76,7 @@ export const updateProduct = async (req: Request, res: Response) => {
     res.status(500).send('Erro no servidor');
   }
 };
+
 
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
@@ -88,3 +95,4 @@ export const deleteProduct = async (req: Request, res: Response) => {
     res.status(500).send('Erro no servidor');
   }
 };
+

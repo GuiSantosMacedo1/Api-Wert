@@ -4,6 +4,7 @@ import connectDB from './config/db';
 import { errorHandler } from './middleware/auth';
 import authRoutes from './routes/auth';
 import productRoutes from './routes/product';
+import path from 'path';
 
 dotenv.config();
 
@@ -15,6 +16,9 @@ connectDB();
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
+
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 
 app.get('/', (req, res) => {
   res.send('API está funcionando');
