@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import Product from '../models/Product';
 
-// Criar produto
 export const createProduct = async (req: Request, res: Response) => {
   const { name, description, price, stock } = req.body;
 
@@ -21,7 +20,6 @@ export const createProduct = async (req: Request, res: Response) => {
   }
 };
 
-// Listar todos os produtos
 export const getProducts = async (req: Request, res: Response) => {
   try {
     const products = await Product.find();
@@ -32,7 +30,6 @@ export const getProducts = async (req: Request, res: Response) => {
   }
 };
 
-// Visualizar um produto específico
 export const getProductById = async (req: Request, res: Response) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -49,7 +46,6 @@ export const getProductById = async (req: Request, res: Response) => {
   }
 };
 
-// Editar um produto
 export const updateProduct = async (req: Request, res: Response) => {
   const { name, description, price, stock } = req.body;
 
@@ -75,7 +71,6 @@ export const updateProduct = async (req: Request, res: Response) => {
   }
 };
 
-// Excluir um produto
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const product = await Product.findById(req.params.id);

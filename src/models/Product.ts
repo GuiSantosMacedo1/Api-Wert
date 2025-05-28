@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-// Interface do produto
 export interface IProduct {
   name: string;
   description: string;
@@ -8,7 +7,6 @@ export interface IProduct {
   stock: number;
 }
 
-// Esquema do produto
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
@@ -16,5 +14,4 @@ const productSchema = new mongoose.Schema({
   stock: { type: Number, required: true, default: 0 }
 });
 
-// Modelo do produto
 export default mongoose.model<IProduct & mongoose.Document>('Product', productSchema);

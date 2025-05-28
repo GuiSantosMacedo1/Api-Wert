@@ -3,7 +3,6 @@ import { register, login } from '../controllers/authController';
 
 const router = express.Router();
 
-// Rotas de autenticação
 router.post('/register', register);
 router.post('/login', login);
 
