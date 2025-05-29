@@ -65,3 +65,10 @@ src/
 ├── uploads/      # Diretório para uploads (se necessário)
 └── index.ts      # Ponto de entrada da aplicação
 ```
+
+## 🌐 Deploy
+
+A aplicação está disponível em:
+
+🔗 (https://railway.com/project/e8d2642e-f6b5-4053-8cdd-9ab0a059954e/service/39b2412f-7658-4dde-a88a-48db34d09e22/metrics?environmentId=6c67fb9b-aef8-4b68-b901-c5e41abc10f6) 
+(Deploy realizado via [[Railway](https://railway.com/dashboard))]
