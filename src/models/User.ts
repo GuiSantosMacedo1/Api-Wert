@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-// Interface do usuário
 export interface IUser {
   id: string;
   email: string;
@@ -8,7 +7,6 @@ export interface IUser {
   isAdmin: boolean;
 }
 
-// Esquema do usuário
 const userSchema = new mongoose.Schema({
   name: { type: String, required: false },
   email: { type: String, required: true, unique: true },
@@ -16,5 +14,4 @@ const userSchema = new mongoose.Schema({
   isAdmin: { type: Boolean, default: false }
 });
 
-// Modelo do usuário
 export default mongoose.model<IUser & mongoose.Document>('User', userSchema);

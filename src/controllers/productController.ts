@@ -1,16 +1,18 @@
 import { Request, Response } from 'express';
 import Product from '../models/Product';
 
-// Criar produto
 export const createProduct = async (req: Request, res: Response) => {
-  const { name, description, price, stock } = req.body;
-
+  const { name, description, price, category, stock, rating, imageUrl } = req.body;
+  
   try {
     const product = new Product({
       name,
       description,
       price,
-      stock
+      stock,
+      rating,
+      category,
+      imageUrl
     });
 
     await product.save();
@@ -20,8 +22,6 @@ export const createProduct = async (req: Request, res: Response) => {
     res.status(500).send('Erro no servidor');
   }
 };
-
-// Listar todos os produtos
 export const getProducts = async (req: Request, res: Response) => {
   try {
     const products = await Product.find();
@@ -32,7 +32,6 @@ export const getProducts = async (req: Request, res: Response) => {
   }
 };
 
-// Visualizar um produto específico
 export const getProductById = async (req: Request, res: Response) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -49,19 +48,32 @@ export const getProductById = async (req: Request, res: Response) => {
   }
 };
 
-// Editar um produto
 export const updateProduct = async (req: Request, res: Response) => {
-  const { name, description, price, stock } = req.body;
-
+  const { name, description, price, category, stock, imageUrl, rating } = req.body;
+  
   try {
     let product = await Product.findById(req.params.id);
     if (!product) {
       return res.status(404).json({ msg: 'Produto não encontrado' });
     }
 
+    const updateData: any = { 
+      name,
+      description,
+      price,
+      stock,
+      rating,
+      category,
+      imageUrl
+    };
+    
+    if (imageUrl) {
+      updateData.imageUrl = imageUrl;
+    }
+
     product = await Product.findByIdAndUpdate(
       req.params.id,
-      { name, description, price, stock },
+      updateData,
       { new: true }
     );
 
@@ -75,7 +87,7 @@ export const updateProduct = async (req: Request, res: Response) => {
   }
 };
 
-// Excluir um produto
+
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -93,3 +105,4 @@ export const deleteProduct = async (req: Request, res: Response) => {
     res.status(500).send('Erro no servidor');
   }
 };
+

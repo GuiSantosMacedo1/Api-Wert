@@ -4,31 +4,40 @@ import connectDB from './config/db';
 import { errorHandler } from './middleware/auth';
 import authRoutes from './routes/auth';
 import productRoutes from './routes/product';
+import path from 'path';
 
-// Carregar variáveis de ambiente
 dotenv.config();
 
-// Inicializar Express
+
 const app = express();
 
-// Middleware para processar JSON
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Conectar ao MongoDB
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', '*');
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  next();
+});
 connectDB();
 
-// Rotas
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 
-// Rota básica
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+
 app.get('/', (req, res) => {
   res.send('API está funcionando');
 });
 
-// Middleware de tratamento de erros
 app.use(errorHandler);
 
-// Iniciar servidor
-const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3001; // Mudando para porta 3001
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000; 
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));

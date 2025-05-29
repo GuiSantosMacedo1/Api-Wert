@@ -1,20 +1,23 @@
 import mongoose from 'mongoose';
 
-// Interface do produto
 export interface IProduct {
   name: string;
   description: string;
   price: number;
   stock: number;
+  rating: number;
+  category: string; 
+  imageUrl?: string;
 }
 
-// Esquema do produto
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
   price: { type: Number, required: true },
-  stock: { type: Number, required: true, default: 0 }
+  rating: { type: Number, required: false, default: 0 },
+  stock: { type: Number, required: true, default: 0 },
+  category: { type: String, required: true },
+  imageUrl: { type: String, required: false } 
 });
 
-// Modelo do produto
 export default mongoose.model<IProduct & mongoose.Document>('Product', productSchema);

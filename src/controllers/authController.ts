@@ -3,32 +3,26 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
 
-// Registrar usuário
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password, isAdmin } = req.body;
 
   try {
-    // Verificar se o usuário já existe
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ msg: 'Usuário já existe' });
     }
 
-    // Criar novo usuário
     user = new User({
       email,
       password,
       isAdmin: isAdmin || false
     });
 
-    // Hash da senha
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
 
-    // Salvar usuário
     await user.save();
 
-    // Criar e retornar JWT
     const payload = {
       id: user.id,
       isAdmin: user.isAdmin
@@ -37,7 +31,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     jwt.sign(
       payload,
       process.env.JWT_SECRET || 'secret',
-      { expiresIn: '30d' },
+      { expiresIn: '10m' },
       (err: Error | null, token?: string) => {
         if (err) return next(err);
         res.json({ token });
@@ -49,24 +43,20 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
   }
 };
 
-// Login de usuário
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   try {
-    // Verificar se o usuário existe
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ msg: 'Credenciais inválidas' });
     }
 
-    // Verificar senha
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ msg: 'Credenciais inválidas' });
     }
 
-    // Criar e retornar JWT
     const payload = {
       id: user.id,
       isAdmin: user.isAdmin
@@ -75,12 +65,34 @@ export const login = async (req: Request, res: Response) => {
     jwt.sign(
       payload,
       process.env.JWT_SECRET || 'secret',
-      { expiresIn: '30d' },
+      { expiresIn: '10m' },
       (err: Error | null, token?: string) => {
         if (err) throw err;
         res.json({ token });
       }
     );
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro no servidor');
+  }
+};
+
+export const validateToken = async (req: Request & { user?: any }, res: Response) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    
+    if (!user) {
+      return res.status(404).json({ msg: 'Usuário não encontrado' });
+    }
+    
+    res.json({
+      isValid: true,
+      user: {
+        id: user.id,
+        email: user.email,
+        isAdmin: user.isAdmin
+      }
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro no servidor');

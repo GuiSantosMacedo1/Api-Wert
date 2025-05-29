@@ -4,7 +4,6 @@ import { auth, admin } from '../middleware/auth';
 
 const router = express.Router();
 
-// Rotas de produtos
 router.post('/', auth, admin, createProduct);
 router.get('/', getProducts);
 router.get('/:id', getProductById);
