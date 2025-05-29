@@ -9,6 +9,16 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*.ts"],
+  "include": [
+    "src/**/*.ts", 
+    "src/controllers/product-controller.test.ts", 
+    "src/middleware/auth.test.ts", 
+    "middleware-upload.test.ts", 
+    "src/models/models.test.ts", 
+    "routes.test.ts",
+    "upload.test.ts",
+    "db.test.ts",
+    "index.test.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }
