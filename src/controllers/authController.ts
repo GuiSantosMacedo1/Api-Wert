@@ -31,7 +31,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     jwt.sign(
       payload,
       process.env.JWT_SECRET || 'secret',
-      { expiresIn: '30d' },
+      { expiresIn: '10m' },
       (err: Error | null, token?: string) => {
         if (err) return next(err);
         res.json({ token });
@@ -65,12 +65,34 @@ export const login = async (req: Request, res: Response) => {
     jwt.sign(
       payload,
       process.env.JWT_SECRET || 'secret',
-      { expiresIn: '30d' },
+      { expiresIn: '10m' },
       (err: Error | null, token?: string) => {
         if (err) throw err;
         res.json({ token });
       }
     );
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro no servidor');
+  }
+};
+
+export const validateToken = async (req: Request & { user?: any }, res: Response) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    
+    if (!user) {
+      return res.status(404).json({ msg: 'Usuário não encontrado' });
+    }
+    
+    res.json({
+      isValid: true,
+      user: {
+        id: user.id,
+        email: user.email,
+        isAdmin: user.isAdmin
+      }
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro no servidor');

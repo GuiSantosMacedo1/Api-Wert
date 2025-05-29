@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import Product from '../models/Product';
 
 export const createProduct = async (req: Request, res: Response) => {
-  const { name, description, price, stock } = req.body;
+  const { name, description, price, category, stock, rating, imageUrl } = req.body;
   
   try {
     const product = new Product({
@@ -10,7 +10,9 @@ export const createProduct = async (req: Request, res: Response) => {
       description,
       price,
       stock,
-      imageUrl: req.file ? `/uploads/${req.file.filename}` : undefined
+      rating,
+      category,
+      imageUrl
     });
 
     await product.save();
@@ -47,7 +49,7 @@ export const getProductById = async (req: Request, res: Response) => {
 };
 
 export const updateProduct = async (req: Request, res: Response) => {
-  const { name, description, price, stock } = req.body;
+  const { name, description, price, category, stock, imageUrl, rating } = req.body;
   
   try {
     let product = await Product.findById(req.params.id);
@@ -55,10 +57,18 @@ export const updateProduct = async (req: Request, res: Response) => {
       return res.status(404).json({ msg: 'Produto não encontrado' });
     }
 
-    const updateData: any = { name, description, price, stock };
+    const updateData: any = { 
+      name,
+      description,
+      price,
+      stock,
+      rating,
+      category,
+      imageUrl
+    };
     
-    if (req.file) {
-      updateData.imageUrl = `/uploads/${req.file.filename}`;
+    if (imageUrl) {
+      updateData.imageUrl = imageUrl;
     }
 
     product = await Product.findByIdAndUpdate(
