@@ -36,8 +36,7 @@ API REST para gerenciamento de produtos com autenticação JWT e controle de ace
 
 ## Endpoints da API
 
-Quando rodar o projeto, garanta que ele esteja rodando na porta 3000
-Deve ser assim: localhost:3000
+Quando rodar o projeto, garanta que ele esteja rodando na porta 3000. Deve ser assim: localhost:3000
 
 ### Autenticação
 
