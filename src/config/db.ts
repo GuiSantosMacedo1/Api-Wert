@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const connectDB = () => {
   const connectWithRetry = () => {
-    mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/api-welt')
+    mongoose.connect(process.env.MONGO_URI || "mongodb://mongo:OYtnUWcLwxPJtcGpxmXOyBSsLVYhnkfk@trolley.proxy.rlwy.net:17619/api-welt")
       .then(() => {
         console.log('MongoDB conectado com sucesso');
       })
@@ -15,5 +15,4 @@ const connectDB = () => {
 
   connectWithRetry();
 };
-
 export default connectDB;
